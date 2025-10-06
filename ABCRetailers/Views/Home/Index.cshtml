@@ -1,0 +1,174 @@
+﻿@model ABCRetailers.Models.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="dashboard-wrapper py-5">
+    <!-- Hero Section -->
+    <div class="hero-banner mb-5 text-center text-white">
+        <div class="hero-overlay"></div>
+        <div class="hero-content position-relative z-2">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="fas fa-store"></i> Welcome to <span class="brand-highlight">ABC Retailers</span>!
+            </h1>
+            <p class="lead fw-light">Your one-stop shop for <span class="fw-bold">exclusive deals</span> and the <span class="fw-bold">latest products</span></p>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-lg btn-warning shadow-sm mt-3 px-4 py-2">
+                <i class="fas fa-shopping-bag me-2"></i> Start Shopping
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-5 g-4 text-center">
+        <div class="col-md-3 col-sm-6">
+            <div class="card action-card hover-card h-100">
+                <a asp-controller="Customer" asp-action="Index" class="card-body text-decoration-none">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h6 class="fw-bold">Customers</h6>
+                    <span class="badge bg-primary">@Model?.CustomerCount</span>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card action-card hover-card h-100">
+                <a asp-controller="Product" asp-action="Index" class="card-body text-decoration-none">
+                    <i class="fas fa-box fa-3x text-success mb-3"></i>
+                    <h6 class="fw-bold">Products</h6>
+                    <span class="badge bg-success">@Model?.ProductCount</span>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card action-card hover-card h-100">
+                <a asp-controller="Order" asp-action="Index" class="card-body text-decoration-none">
+                    <i class="fas fa-shopping-cart fa-3x text-warning mb-3"></i>
+                    <h6 class="fw-bold">Orders</h6>
+                    <span class="badge bg-warning text-dark">@Model?.OrderCount</span>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card action-card hover-card h-100">
+                <a asp-controller="Upload" asp-action="Index" class="card-body text-decoration-none">
+                    <i class="fas fa-upload fa-3x text-info mb-3"></i>
+                    <h6 class="fw-bold">Upload Files</h6>
+                    <small class="text-muted">Payment Proofs</small>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4 fw-bold section-title d-flex align-items-center">
+                <i class="fas fa-star text-warning me-2"></i> Featured Products
+            </h2>
+
+            @if (Model?.FeaturedProducts?.Any() == true)
+            {
+                <div class="row g-4">
+                    @foreach (var product in Model.FeaturedProducts.Take(8))
+                    {
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="card product-card hover-card h-100 shadow-sm">
+                                @if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+                                {
+                                    <img src="@product.ImageUrl" class="card-img-top rounded-top" alt="@product.ProductName" style="height: 180px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center rounded-top" style="height: 180px;">
+                                        <i class="fas fa-image fa-3x text-muted"></i>
+                                    </div>
+                                }
+
+                                <div class="card-body d-flex flex-column">
+                                    <h6 class="card-title text-center fw-bold">@product.ProductName</h6>
+                                    <div class="mt-auto text-center">
+                                        <p class="mb-1"><strong class="text-success">@product.Price.ToString("C")</strong></p>
+                                        <span class="badge bg-light text-muted">Stock: @product.StockAvailable</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info shadow-sm">
+                    <i class="fas fa-info-circle"></i> No products available yet.
+                    <a asp-controller="Product" asp-action="Create" class="alert-link">Add your first product</a>!
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Background */
+    .dashboard-wrapper {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #fdfbfb, #ebedee);
+        padding-bottom: 50px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+        position: relative;
+        background: url('https://source.unsplash.com/1600x500/?retail,shopping') center/cover no-repeat;
+        border-radius: 1rem;
+        overflow: hidden;
+        padding: 80px 20px;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .brand-highlight {
+        color: #ffc107;
+    }
+
+    /* Gradient Text */
+    .text-gradient {
+        background: linear-gradient(45deg, #007bff, #6610f2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Section Title Divider */
+    .section-title {
+        border-left: 5px solid #ffc107;
+        padding-left: 10px;
+    }
+
+    /* Card Styling */
+    .action-card, .product-card {
+        border-radius: 1rem;
+        border: none;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(8px);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    /* Hover Effects */
+    .hover-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+
+    /* Alert Styling */
+    .alert {
+        border-radius: 0.75rem;
+    }
+</style>
